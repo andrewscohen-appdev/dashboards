@@ -35,6 +35,13 @@ class ForexController < ApplicationController
 
     @first_currency = params.fetch("first_choice")
     @second_currency = params.fetch("second_choice")
+
+    @link = "https://api.exchangerate.host/convert?from=#{@first_currency}&to=#{@second_currency}"
+    @raw_exchange_data = open(@link).read
+    @parsed_exchange_data = JSON.parse(@raw_exchange_data)
+    @info_hash = @parsed_exchange_data.fetch("info")
+    @exchange_rate = @info_hash.fetch("rate")
+    
     render({ :template => "exchange_templates/forex_final.html.erb" })
   end
 end
